@@ -465,6 +465,9 @@ router.post('/Pa_AEE_TurnoApertura', jwtMW, async (req, res, next) => {
     var FechaFinal = req.body.FechaFinal;
     var HoraFinal = req.body.HoraFinal;
     var IdLocal = req.body.IdLocal;
+    var IdCaja = req.body.IdCaja;
+    var HoraCierre = req.body.HoraCierre;
+    var TipoCambio = req.body.TipoCambio;
     var Opcion = req.body.Opcion;
 
     try {
@@ -479,6 +482,9 @@ router.post('/Pa_AEE_TurnoApertura', jwtMW, async (req, res, next) => {
             .input('FechaFinal', sql.Date, FechaFinal)
             .input('HoraFinal', sql.NVarChar, HoraFinal)
             .input('IdLocal', sql.Int, IdLocal)
+            .input('IdCaja', sql.Int, IdCaja)
+            .input('HoraCierre', sql.NVarChar, HoraCierre)
+            .input('TipoCambio', sql.Decimal, TipoCambio)
             .input('Opcion', sql.Int, Opcion)
             .output('Rpta')
             .execute('Pa_AEE_TurnoApertura')
@@ -510,6 +516,9 @@ router.put('/Pa_AEE_TurnoApertura', jwtMW, async (req, res, next) => {
     var FechaFinal = req.body.FechaFinal;
     var HoraFinal = req.body.HoraFinal;
     var IdLocal = req.body.IdLocal;
+    var IdCaja = req.body.IdCaja;
+    var HoraCierre = req.body.HoraCierre;
+    var TipoCambio = req.body.TipoCambio;
     var Opcion = req.body.Opcion;
 
     try {
@@ -524,6 +533,9 @@ router.put('/Pa_AEE_TurnoApertura', jwtMW, async (req, res, next) => {
             .input('FechaFinal', sql.Date, FechaFinal)
             .input('HoraFinal', sql.NVarChar, HoraFinal)
             .input('IdLocal', sql.Int, IdLocal)
+            .input('IdCaja', sql.Int, IdCaja)
+            .input('HoraCierre', sql.NVarChar, HoraCierre)
+            .input('TipoCambio', sql.Decimal, TipoCambio)
             .input('Opcion', sql.Int, Opcion)
             .output('Rpta')
             .execute('Pa_AEE_TurnoApertura')
@@ -644,6 +656,34 @@ router.get('/Pa_MB_Salon', jwtMW, async (req, res, next) => {
 
 });
 
+router.get('/Pa_MB_Salon_App', jwtMW, async (req, res, next) => {
+
+    var IdLocal = req.query.IdLocal;
+
+    if (IdLocal != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('IdLocal', sql.Int, IdLocal)
+                .execute('Pa_MB_Salon_App')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "IdLocal es requerido" }));
+    }
+
+});
 //=========================================================================
 // TABLA MESAS
 // POST / GET
@@ -679,6 +719,35 @@ router.get('/Pa_MB_Mesa_Tactil', jwtMW, async (req, res, next) => {
     }
     else {
         res.send(JSON.stringify({ success: false, message: "Missing codigo in query" }));
+    }
+
+});
+
+router.get('/Pa_MB_Mesa_Tactil_App', jwtMW, async (req, res, next) => {
+
+    var idSalon = req.query.idSalon;
+
+    if (idSalon != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('idSalon', sql.Int, idSalon)
+                .execute('Pa_MB_Mesa_Tactil_App')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "idSalon es requerido" }));
     }
 
 });
@@ -754,6 +823,35 @@ router.get('/Pa_MB_Familia_Lista', jwtMW, async (req, res, next) => {
 
 });
 
+router.get('/Pa_MB_Familia_App', jwtMW, async (req, res, next) => {
+
+    var idSalon = req.query.idSalon;
+
+    if (idSalon != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('idSalon', sql.Int, idSalon)
+                .execute('Pa_MB_Familia_App')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "idSalon es requerido" }));
+    }
+
+});
+
 //=========================================================================
 // TABLA STOCK
 // POST / GET
@@ -788,6 +886,66 @@ router.get('/Pa_MB_Stock_Listas', jwtMW, async (req, res, next) => {
     }
     else {
         res.send(JSON.stringify({ success: false, message: "Missing codigo in query" }));
+    }
+
+})
+
+router.get('/Pa_MB_Stock_Listas_App_Online', jwtMW, async (req, res, next) => {
+
+    var idFamilia = req.query.idFamilia;
+    var IdLocal = req.query.IdLocal;
+    if (IdLocal != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('idFamilia', sql.Int, idFamilia)
+                .input('IdLocal', sql.Int, IdLocal)
+                .execute('Pa_MB_Stock_Listas_App_Online')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "IdLocal es requerido" }));
+    }
+
+})
+
+router.get('/Pa_MB_Stock_Listas_App_Offline', jwtMW, async (req, res, next) => {
+
+    var idFamilia = req.query.idFamilia;
+    var IdLocal = req.query.IdLocal;
+    if (IdLocal != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('idFamilia', sql.Int, idFamilia)
+                .input('IdLocal', sql.Int, IdLocal)
+                .execute('Pa_MB_Stock_Listas_App_Offline')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "IdLocal es requerido" }));
     }
 
 })
@@ -854,6 +1012,126 @@ router.get('/Pa_MB_Stock_Filtro', jwtMW, async (req, res, next) => {
     }
     else {
         res.send(JSON.stringify({ success: false, message: "Missing codigo in query" }));
+    }
+
+});
+
+router.get('/Pa_MB_Stock_Filtro_App', jwtMW, async (req, res, next) => {
+
+    var Texto = req.query.Texto;
+    var IdLocal = req.query.IdLocal;
+
+    if (IdLocal != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('Texto', sql.VarChar, Texto)
+                .input('IdLocal', sql.Int, IdLocal)
+                .execute('Pa_MB_Stock_Filtro_App')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "IdLocal es requerido" }));
+    }
+
+});
+
+router.get('/Pa_MB_Stock_Filtro_App_Online', jwtMW, async (req, res, next) => {
+
+    var Texto = req.query.Texto;
+    var IdLocal = req.query.IdLocal;
+
+    if (IdLocal != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('Texto', sql.VarChar, Texto)
+                .input('IdLocal', sql.Int, IdLocal)
+                .execute('Pa_MB_Stock_Filtro_App_Online')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "IdLocal es requerido" }));
+    }
+
+});
+
+router.get('/Pa_MB_Stock_Filtro_App_2', jwtMW, async (req, res, next) => {
+
+    var IdStock = req.query.IdStock;
+
+    if (IdStock != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('IdStock', sql.Int, IdStock)
+                .execute('Pa_MB_Stock_Filtro_App_2')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "IdStock es requerido" }));
+    }
+
+});
+
+router.get('/Pa_MB_Stock_Filtro_App_3', jwtMW, async (req, res, next) => {
+
+    var IdStock = req.query.IdStock;
+
+    if (IdStock != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('IdStock', sql.Int, IdStock)
+                .execute('Pa_MB_Stock_Filtro_App_3')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "IdStock es requerido" }));
     }
 
 });
@@ -938,6 +1216,39 @@ router.get('/Pa_MB_PresentacionProd_Filtro', jwtMW, async (req, res, next) => {
 
 });
 
+router.get('/Pa_MB_PresentacionProd_Filtro_App', jwtMW, async (req, res, next) => {
+
+    var Busqueda = req.query.Busqueda;
+    var IdStock = req.query.IdStock;
+    var IdLocal = req.query.IdLocal;
+
+    if (IdStock != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('Busqueda', sql.VarChar, Busqueda)
+                .input('IdStock', sql.Int, IdStock)
+                .input('IdLocal', sql.Int, IdLocal)
+                .execute('Pa_MB_PresentacionProd_Filtro_App')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "IdStock es requerido" }));
+    }
+
+});
+
 router.get('/Pa_MB_PresentacionProd', jwtMW, async (req, res, next) => {
     var idBusqueda = req.query.idBusqueda;
     var IdSalon = req.query.IdSalon;
@@ -965,6 +1276,35 @@ router.get('/Pa_MB_PresentacionProd', jwtMW, async (req, res, next) => {
     }
     else {
         res.send(JSON.stringify({ success: false, message: "Missing codigo in query" }));
+    }
+
+});
+
+router.get('/Pa_MB_PresentacionProd_App', jwtMW, async (req, res, next) => {
+    var idPreProd = req.query.idPreProd;
+    var IdSalon = req.query.IdSalon;
+    if (IdSalon != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('idPreProd', sql.Int, idPreProd)
+                .input('IdSalon', sql.Int, IdSalon)
+                .execute('Pa_MB_PresentacionProd_App')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "IdSalon es requerido" }));
     }
 
 });
@@ -1293,6 +1633,35 @@ router.get('/Pa_MB_DetPedido', jwtMW, async (req, res, next) => {
 
 });
 
+router.get('/Pa_MB_DetPedido_App', jwtMW, async (req, res, next) => {
+
+    var idPedido = req.query.idPedido;
+
+    if (idPedido != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('idPedido', sql.Int, idPedido)
+                .execute('Pa_MB_DetPedido_App')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "idPedido es requerido" }));
+    }
+
+});
+
 //=========================================================================
 // TABLA MESA PEDIDO
 // POST / GET
@@ -1405,6 +1774,35 @@ router.get('/Pa_MB_Mesa_Pedido', jwtMW, async (req, res, next) => {
     }
     else {
         res.send(JSON.stringify({ success: false, message: "Missing codigo in query" }));
+    }
+
+});
+
+router.get('/Pa_MB_Mesa_Pedido_App', jwtMW, async (req, res, next) => {
+
+    var idMesa = req.query.idMesa;
+
+    if (idMesa != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('idMesa', sql.Int, idMesa)
+                .execute('Pa_MB_Mesa_Pedido_App')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "idMesa es requerido" }));
     }
 
 });
@@ -1587,7 +1985,7 @@ router.post('/Pa_AEE_DetVale', jwtMW, async (req, res, next) => {
 })
 
 //=========================================================================
-// TABLA CLIENTES
+// Pa_MB_Clientes
 // POST / GET
 //=========================================================================
 
@@ -1878,6 +2276,8 @@ router.post('/Pa_AEE_Salida', jwtMW, async (req, res, next) => {
     var DireccionEntrega = req.body.DireccionEntrega;
     var CelularEntrega = req.body.CelularEntrega;
     var IdSalon = req.body.IdSalon;
+    var DividirCuenta = req.body.DividirCuenta;
+    var CantItems = req.body.CantItems;
     var Opcion = req.body.Opcion;
 
     try {
@@ -1942,6 +2342,8 @@ router.post('/Pa_AEE_Salida', jwtMW, async (req, res, next) => {
             .input('DireccionEntrega', sql.NVarChar, DireccionEntrega)
             .input('CelularEntrega', sql.NVarChar, CelularEntrega)
             .input('IdSalon', sql.Int, IdSalon)
+            .input('DividirCuenta', sql.Bit, DividirCuenta)
+            .input('CantItems', sql.Int, CantItems)
             .input('Opcion', sql.Int, Opcion)
             .output('Rpta')
             .execute('Pa_AEE_Salida')
@@ -2219,6 +2621,9 @@ router.get('/Pa_RPT_ResVtasxFPago_turno', jwtMW, async (req, res, next) => {
 
     var idturno = req.query.idturno;
     var idUsuario = req.query.idUsuario;
+    var PorFechas = req.query.PorFechas;
+    var FechaInicio = req.query.FechaInicio;
+    var FechaFin = req.query.FechaFin;
     var Opcion = req.query.Opcion;
     if (Opcion != null) {
         try {
@@ -2226,9 +2631,9 @@ router.get('/Pa_RPT_ResVtasxFPago_turno', jwtMW, async (req, res, next) => {
             const queryResult = await pool.request()
                 .input('idturno', sql.Int, idturno)
                 .input('idUsuario', sql.Int, idUsuario)
-                .input('PorFechas', sql.TinyInt, 0)
-                .input('FechaInicio', sql.Date, new Date())
-                .input('FechaFin', sql.Date, new Date())
+                .input('PorFechas', sql.TinyInt, PorFechas)
+                .input('FechaInicio', sql.Date, FechaInicio)
+                .input('FechaFin', sql.Date, FechaFin)
                 .input('Opcion', sql.Int, Opcion)
                 .execute('Pa_RPT_ResVtasxFPago_turno')
 

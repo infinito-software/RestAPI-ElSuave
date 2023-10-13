@@ -5,7 +5,7 @@ var config = {
     user: 'sa',
     password: '@@Infinito1234',
     server: '167.114.106.184',
-    database: 'BD_SRGOURMET_PEQUEÑOSGUSTITOS'
+    database: 'BD_SRGOURMET_SAZON_GATA'
 };
 
 //BD_SRGOURMET_ELSUAVE

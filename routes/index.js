@@ -2259,7 +2259,9 @@ router.post('/Pa_AEE_Salida', jwtMW, async (req, res, next) => {
     var NombreOpcional = req.body.NombreOpcional;
     var EnviadoPorCorreo = req.body.EnviadoPorCorreo;
     var SubidoHosting = req.body.SubidoHosting;
-    var Anulado_NotaCredito_CBA = req.body.Anulado_NotaCredito_CBA;
+
+    var Anulado_NotaCredito_CBA = null;
+
     var FechaAnulacion = req.body.FechaAnulacion;
     var IdUsuarioAnulacion = req.body.IdUsuarioAnulacion;
     var IdPedido = req.body.IdPedido;
@@ -2622,8 +2624,8 @@ router.get('/Pa_RPT_ResVtasxFPago_turno', jwtMW, async (req, res, next) => {
     var idturno = req.query.idturno;
     var idUsuario = req.query.idUsuario;
     var PorFechas = req.query.PorFechas;
-    var FechaInicio = req.query.FechaInicio;
-    var FechaFin = req.query.FechaFin;
+    var Fecha = "2023-10-13T00:00:00";
+    var Fecha2 = new Date(Fecha);
     var Opcion = req.query.Opcion;
     if (Opcion != null) {
         try {
@@ -2632,8 +2634,8 @@ router.get('/Pa_RPT_ResVtasxFPago_turno', jwtMW, async (req, res, next) => {
                 .input('idturno', sql.Int, idturno)
                 .input('idUsuario', sql.Int, idUsuario)
                 .input('PorFechas', sql.TinyInt, PorFechas)
-                .input('FechaInicio', sql.Date, FechaInicio)
-                .input('FechaFin', sql.Date, FechaFin)
+                .input('FechaInicio', sql.Date, Fecha2)
+                .input('FechaFin', sql.Date, Fecha2)
                 .input('Opcion', sql.Int, Opcion)
                 .execute('Pa_RPT_ResVtasxFPago_turno')
 

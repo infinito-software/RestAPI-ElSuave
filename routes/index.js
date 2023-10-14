@@ -2826,6 +2826,44 @@ router.get('/Pa_Generar_CPE', jwtMW, async (req, res, next) => {
 
 });
 
+router.get('/Pa_Duplicado_Comprobante_Pago', jwtMW, async (req, res, next) => {
+
+    var numSerie = req.query.numSerie;
+    var numCorrelativo = req.query.numCorrelativo;
+    var tipoCompPago = req.query.tipoCompPago;
+    var idUsuario = req.query.idUsuario;
+    var opcionBusqueda = req.query.opcionBusqueda;
+
+    if (opcionBusqueda != null) {
+        try {
+            const pool = await poolPromise
+            const queryResult = await pool.request()
+                .input('numSerie', sql.VarChar, numSerie)
+                .input('numCorrelativo', sql.VarChar, numCorrelativo)
+                .input('tipoCompPago', sql.Int, tipoCompPago)
+                .input('idUsuario', sql.Int, idUsuario)
+                .input('opcionBusqueda', sql.Int, opcionBusqueda)
+                .execute('Pa_Duplicado_Comprobante_Pago')
+
+            if (queryResult.recordset.length > 0) {
+                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+
+            }
+            else {
+                res.send(JSON.stringify({ success: false, message: "Empty" }));
+            }
+        }
+        catch (err) {
+            res.status(500) //Internal Server Error
+            res.send(JSON.stringify({ success: false, message: err.message }));
+        }
+    }
+    else {
+        res.send(JSON.stringify({ success: false, message: "opcionBusqueda es requerido" }));
+    }
+
+});
+
 //=========================================================================
 // TABLA TOKEN
 // POST / GET

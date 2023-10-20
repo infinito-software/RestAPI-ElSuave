@@ -1514,6 +1514,8 @@ router.put('/Pa_AEE_DetPedido', jwtMW, async (req, res, next) => {
     var DescripExtra = req.body.DescripExtra;
     var HoraInicioPreparacion = req.body.HoraInicioPreparacion;
     var HoraFinPreparacion = req.body.HoraFinPreparacion;
+    var IdAlquiler = req.body.IdAlquiler;
+    var IdsInsumosExtras = req.body.IdsInsumosExtras;
     var opcion = req.body.opcion;
 
     try {
@@ -1532,6 +1534,8 @@ router.put('/Pa_AEE_DetPedido', jwtMW, async (req, res, next) => {
             .input('DescripExtra', sql.VarChar, DescripExtra)
             .input('HoraInicioPreparacion', sql.DateTime, new Date(HoraInicioPreparacion))
             .input('HoraFinPreparacion', sql.DateTime, new Date(HoraFinPreparacion))
+            .input('IdAlquiler', sql.Int, IdAlquiler)
+            .input('IdInsumosExtras', sql.NVarChar, IdsInsumosExtras)
             .input('Opcion', sql.Int, opcion)
             .output('Rpta')
             .execute('Pa_AEE_DetPedido')
@@ -1567,6 +1571,8 @@ router.delete('/Pa_AEE_DetPedido', jwtMW, async (req, res, next) => {
     var DescripExtra = req.query.DescripExtra;
     var HoraInicioPreparacion = req.query.HoraInicioPreparacion;
     var HoraFinPreparacion = req.query.HoraFinPreparacion;
+    var IdAlquiler = req.body.IdAlquiler;
+    var IdsInsumosExtras = req.body.IdsInsumosExtras;
     var opcion = req.query.opcion;
 
     try {
@@ -1585,6 +1591,8 @@ router.delete('/Pa_AEE_DetPedido', jwtMW, async (req, res, next) => {
             .input('DescripExtra', sql.VarChar, DescripExtra)
             .input('HoraInicioPreparacion', sql.DateTime, new Date(HoraInicioPreparacion))
             .input('HoraFinPreparacion', sql.DateTime, new Date(HoraFinPreparacion))
+            .input('IdAlquiler', sql.Int, IdAlquiler)
+            .input('IdInsumosExtras', sql.NVarChar, IdsInsumosExtras)
             .input('Opcion', sql.Int, opcion)
             .output('Rpta')
             .execute('Pa_AEE_DetPedido')

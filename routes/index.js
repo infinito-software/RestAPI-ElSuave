@@ -2234,7 +2234,7 @@ router.post('/Pa_AEE_Salida', jwtMW, async (req, res, next) => {
     var SaldoInicial = req.body.SaldoInicial;
     var EstadoSalida = req.body.EstadoSalida;
     var EnvioFacturador = req.body.EnvioFacturador;
-    var IdLocal = req.body.IdLocal;
+    var IdLocal = req.body.IdAlmacen;
     var IdAgente;
 
     if (req.body.IdAgente == 0)

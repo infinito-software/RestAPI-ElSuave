@@ -2815,8 +2815,13 @@ router.get('/Pa_Generar_CPE', jwtMW, async (req, res, next) => {
                 .input('DesdeApp', sql.Int, DesdeApp)
                 .execute('Pa_Generar_CPE')
 
-            if (queryResult.recordset.length > 0) {
-                res.send(JSON.stringify({ success: true, result: queryResult.recordset }));
+            if (queryResult.recordsets.length > 0)
+            {
+                const result1 = queryResult.recordsets[0];
+                const result2 = queryResult.recordsets[1];
+                const result3 = queryResult.recordsets[2];
+
+                res.send(JSON.stringify({ success: true, result1, result2, result3 }));
              
             }
             else {
